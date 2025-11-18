@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            display: grid;
+            grid-template-columns: 250px 1fr;
+            grid-template-rows: auto 1fr;
+            min-height: 100vh;
+            background-color: #f0f5ff;
+        }
+        
+        /* Sidebar Styles */
+        .sidebar {
+            grid-row: 1 / -1;
+            background: linear-gradient(to bottom, #1e3c72, #2a5298);
+            color: white;
+            padding: 20px;
+            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            margin-bottom: 30px;
+            font-size: 24px;
+            font-weight: bold;
+        }
+        
+        .logo i {
+            margin-right: 10px;
+            font-size: 28px;
+        }
+        
+        .nav-links {
+            list-style: none;
+        }
+        
+        .nav-links li {
+            margin-bottom: 15px;
+        }
+        
+        .nav-links a {
+            display: flex;
+            align-items: center;
+            color: white;
+            text-decoration: none;
+            padding: 10px;
+            border-radius: 8px;
+            transition: background-color 0.3s;
+        }
+        
+        .nav-links a:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+        
+        .nav-links i {
+            margin-right: 10px;
+            width: 20px;
+            text-align: center;
+        }
+        
+        /* Header Styles */
+        .header {
+            background-color: white;
+            padding: 15px 30px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 20px;
+            align-items: center;
+        }
+        
+        .search-bar {
+            display: flex;
+            align-items: center;
+        }
+        
+        .search-bar input {
+            width: 100%;
+            padding: 8px 15px;
+            border-radius: 20px;
+            border: none;
+            background-color: #f0f5ff;
+            margin-left: 10px;
+        }
+        
+        .user-info {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            gap: 20px;
+        }
+        
+        .user-info .notification {
+            position: relative;
+        }
+        
+        .user-info .notification::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 8px;
+            height: 8px;
+            background-color: #ff4757;
+            border-radius: 50%;
+        }
+        
+        .profile-small {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .profile-small img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+        
+        .welcome {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .welcome img {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+        
+        .welcome-text p {
+            font-size: 14px;
+            font-weight: 500;
+        }
+        
+        .welcome-text h2 {
+            font-size: 20px;
+        }
+        
+        .actions {
+            display: flex;
+            gap: 15px;
+        }
+        
+        .btn {
+            padding: 10px 25px;
+            border-radius: 20px;
+            border: none;
+            background-color: #1e3c72;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        .btn:hover {
+            background-color: #2a5298;
+        }
+        
+        /* Main Content Styles */
+        .main-content {
+            padding: 25px;
+            display: grid;
+            grid-template-columns: 3fr 1fr;
+            gap: 25px;
+            overflow-y: auto;
+        }
+        
+        .projects {
+            grid-row: 1 / 3;
+        }
+        
+        .section-title {
+            margin-bottom: 15px;
+            font-size: 18px;
+            font-weight: 600;
+            color: #333;
+        }
+        
+        .project-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        
+        .card {
+            background-color: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            border-left: 5px solid #ff9f43;
+            display: flex;
+            flex-direction: column;
+            height: 200px;
+        }
+        
+        .card h3 {
+            margin-bottom: 5px;
+            font-size: 16px;
+        }
+        
+        .card p {
+            color: #666;
+            font-size: 14px;
+            flex-grow: 1;
+            overflow: hidden;
+            display: -webkit-box;
+            -webkit-line-clamp: 4;
+            -webkit-box-orient: vertical;
+        }
+        
+        .card-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 15px;
+            margin-top: 15px;
+        }
+        
+        .card-actions i {
+            color: #666;
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+        
+        .card-actions i:hover {
+            color: #1e3c72;
+        }
+        
+        .announcements, .trending {
+            background-color: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        
+        .announcement-item {
+            padding: 15px 0;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .announcement-item:last-child {
+            border-bottom: none;
+        }
+        
+        .announcement-item h4 {
+            font-size: 14px;
+            margin-bottom: 5px;
+        }
+        
+        .announcement-item p {
+            font-size: 12px;
+            color: #666;
+        }
+        
+        .trending-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 10px 0;
+        }
+        
+        .trending-item img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+        
+        .trending-info h4 {
+            font-size: 14px;
+            margin-bottom: 2px;
+        }
+        
+        .trending-info p {
+            font-size: 12px;
+            color: #666;
+        }
+        
+        /* Color variations for project cards */
+        .card:nth-child(2) {
+            border-left-color: #2ed573;
+        }
+        
+        .card:nth-child(3) {
+            border-left-color: #1e90ff;
+        }
+        
+        .card:nth-child(4) {
+            border-left-color: #ff6b81;
+        }
+        
+        .card:nth-child(5) {
+            border-left-color: #a55eea;
+        }
+        
+        .card:nth-child(6) {
+            border-left-color: #ffa502;
+        }
+        
+        /* Personalization for Amlek */
+        .personalized {
+            color: #ff9f43;
+            font-weight: 700;
+        }
+        
+        .signature {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 14px;
+        }
+        
+        /* Responsive adjustments */
+        @media (max-width: 1024px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+            
+            .projects {
+                grid-row: auto;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            body {
+                grid-template-columns: 1fr;
+            }
+            
+            .sidebar {
+                display: none;
+            }
+            
+            .header {
+                grid-template-columns: 1fr;
+            }
+            
+            .welcome {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="logo">
+            <i class="fas fa-chart-line"></i>
+            <span>Dashboard</span>
+        </div>
+        
+        <ul class="nav-links">
+            <li><a href="#"><i class="fas fa-home"></i> Home</a></li>
+            <li><a href="#"><i class="fas fa-user"></i> Profile</a></li>
+            <li><a href="#"><i class="fas fa-envelope"></i> Messages</a></li>
+            <li><a href="#"><i class="fas fa-history"></i> History</a></li>
+            <li><a href="#"><i class="fas fa-tasks"></i> Tasks</a></li>
+            <li><a href="#"><i class="fas fa-users"></i> Communities</a></li>
+            <li><a href="#"><i class="fas fa-cog"></i> Settings</a></li>
+            <li><a href="#"><i class="fas fa-question-circle"></i> Support</a></li>
+            <li><a href="#"><i class="fas fa-shield-alt"></i> Privacy</a></li>
+        </ul>
+        
+        <div class="signature">
+            Designed for <span class="personalized">Amlek Chirayath Davis</span>
+        </div>
+    </div>
+    
+    <!-- Header -->
+    <div class="header">
+        <div class="search-bar">
+            <i class="fas fa-search"></i>
+            <input type="text" placeholder="Search...">
+        </div>
+        
+        <div class="user-info">
+            <i class="far fa-bell notification"></i>
+            <div class="profile-small">
+                <img src="https://i.pravatar.cc/150?img=12" alt="Profile">
+                <span>Amlek Davis</span>
+            </div>
+        </div>
+        
+        <div class="welcome">
+            <img src="https://i.pravatar.cc/150?img=12" alt="Profile">
+            <div class="welcome-text">
+                <p>Hi there,</p>
+                <h2>Amlek Chirayath Davis <span class="personalized">(@amlek)</span></h2>
+            </div>
+        </div>
+        
+        <div class="actions">
+            <button class="btn">New</button>
+            <button class="btn">Upload</button>
+            <button class="btn">Share</button>
+        </div>
+    </div>
+    
+    <!-- Main Content -->
+    <div class="main-content">
+        <div class="projects">
+            <h2 class="section-title">Your Projects</h2>
+            <div class="project-cards">
+                <div class="card">
+                    <h3>Super Cool Project</h3>
+                    <p>Sed tempus ut lacus ut scelerisque. Suspendisse sollicitudin nibh erat, id facilisis felis accumsan nec.</p>
+                    <div class="card-actions">
+                        <i class="far fa-star"></i>
+                        <i class="far fa-eye"></i>
+                        <i class="fas fa-share-alt"></i>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <h3>Less Cool Project</h3>
+                    <p>Nullam condimentum ipsum ut lectus vehicula consectetur. Quisque sed dolor tincidunt, consectetur sapien et, facilisis dolor. Duis sem purus, dignissim ut sapien in, varius pellentesque lacus.</p>
+                    <div class="card-actions">
+                        <i class="far fa-star"></i>
+                        <i class="far fa-eye"></i>
+                        <i class="fas fa-share-alt"></i>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <h3>Impossible App</h3>
+                    <p>In hac habitasse platea dictumst. Vivamus dictum rutrum arcu, a placerat velit sagittis id.</p>
+                    <div class="card-actions">
+                        <i class="far fa-star"></i>
+                        <i class="far fa-eye"></i>
+                        <i class="fas fa-share-alt"></i>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <h3>Easy Peasy App</h3>
+                    <p>Etiam cursus eros ac efficitur fringilla. Vestibulum dignissim urna eget accumsan aliquam. Curabitur dignissim nisi in tortor commodo, ac bibendum magna tincidunt.</p>
+                    <div class="card-actions">
+                        <i class="far fa-star"></i>
+                        <i class="far fa-eye"></i>
+                        <i class="fas fa-share-alt"></i>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <h3>Ad Blocker</h3>
+                    <p>Quisque eget rutrum nisl. Nam augue justo, cursus vitae metus vel, pharetra hendrerit felis. Aliquam sed malesuada eros.</p>
+                    <div class="card-actions">
+                        <i class="far fa-star"></i>
+                        <i class="far fa-eye"></i>
+                        <i class="fas fa-share-alt"></i>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <h3>Money Maker</h3>
+                    <p>Praesent convallis, libero quis congue elementum, nunc ante faucibus sapien, ac scelerisque tortor purus sit amet ex. Pellentesque mollis nec sem vel aliquam.</p>
+                    <div class="card-actions">
+                        <i class="far fa-star"></i>
+                        <i class="far fa-eye"></i>
+                        <i class="fas fa-share-alt"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="announcements">
+            <h2 class="section-title">Announcements</h2>
+            <div class="announcement-item">
+                <h4>Site Maintenance</h4>
+                <p>Vestibulum condimentum tellus lacus, in accumsan elit maximus ac. Donec hendrerit sodales congue ...</p>
+            </div>
+            <div class="announcement-item">
+                <h4>Community Share Day</h4>
+                <p>Nam vel lectus tincidunt, rutrum nulla eu, ornare libero. Aliquam dictum accumsan porttitor ...</p>
+            </div>
+            <div class="announcement-item">
+                <h4>Updated Privacy Policy</h4>
+                <p>Phasellus efficitur nisi eget elit consectetur, eget condimentum ante auctor. Cras fringilla sagittis sem in mattis ...</p>
+            </div>
+        </div>
+        
+        <div class="trending">
+            <h2 class="section-title">Trending</h2>
+            <div class="trending-item">
+                <img src="https://i.pravatar.cc/150?img=5" alt="User">
+                <div class="trending-info">
+                    <h4>@tegan</h4>
+                    <p>World Peace Builder</p>
+                </div>
+            </div>
+            <div class="trending-item">
+                <img src="https://i.pravatar.cc/150?img=12" alt="User">
+                <div class="trending-info">
+                    <h4>@amlek</h4>
+                    <p>Super Cool Project</p>
+                </div>
+            </div>
+            <div class="trending-item">
+                <img src="https://i.pravatar.cc/150?img=8" alt="User">
+                <div class="trending-info">
+                    <h4>@kendall</h4>
+                    <p>Life Changing App</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
